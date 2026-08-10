@@ -1,0 +1,21 @@
+{
+  "short_name": "TWI Signal",
+  "name": "TWI Signal Panel",
+  "icons": [
+    {
+      "src": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhPfflvqi40inPi-P0b1n2GX_gPFq_wxdUWsdcFXtA4jMpFJMUe19h686hwv30rM0RSBcL9ReioYhQM1vwXW0OYKeS9LaL6lcrCs6huHm2rwzM2W_OEAN9yUXcjPRUgFTYfUZIoZoXCz6XBjmrTQTcliLs_VceGhrKT0mIG7853a6q2WdV3G2J2VwhqCs0I/s320/WhatsApp_Image_2026-02-24_at_6.45.34_PM-removebg-preview(2).png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhPfflvqi40inPi-P0b1n2GX_gPFq_wxdUWsdcFXtA4jMpFJMUe19h686hwv30rM0RSBcL9ReioYhQM1vwXW0OYKeS9LaL6lcrCs6huHm2rwzM2W_OEAN9yUXcjPRUgFTYfUZIoZoXCz6XBjmrTQTcliLs_VceGhrKT0mIG7853a6q2WdV3G2J2VwhqCs0I/s320/WhatsApp_Image_2026-02-24_at_6.45.34_PM-removebg-preview(2).png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#0b1210",
+  "theme_color": "#0b1210",
+  "display": "standalone",
+  "orientation": "portrait"
+}
