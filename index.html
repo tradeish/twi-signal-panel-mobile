@@ -37,7 +37,13 @@
     --blue:#2563eb;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html,body{ background:var(--bg); }
+  /* overflow-x:hidden here is the actual fix for the theme toggle getting
+     pushed off-screen — without it, if ANY element (even briefly, on some
+     phone widths) is a hair wider than the viewport, the whole page gains
+     horizontal scroll and you have to swipe sideways to see things like
+     the dark/light switch. This guarantees that can never happen, on
+     every section (Live Signals, API Usage, etc.) since it's global. */
+  html,body{ background:var(--bg); overflow-x:hidden; width:100%; }
   body{
     margin:0;
     color:var(--text);
@@ -52,14 +58,28 @@
     background:linear-gradient(180deg,var(--bg) 70%,transparent);
   }
   header .headrow{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  /* headTextWrap gets min-width:0 so it's allowed to shrink below its
+     content's natural width inside the flex row — without this, a long
+     subtitle forces the row wider than the screen and pushes the theme
+     toggle out of view (this was the "have to swipe left" bug). The
+     title/subtitle text itself truncates with an ellipsis instead. */
+  .headTextWrap{ min-width:0; overflow:hidden; }
   header h1{
     font-size:19px; margin:0; letter-spacing:0.2px;
     display:flex; align-items:center; gap:8px;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   }
-  header .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
-  header p{margin:4px 0 0; font-size:12.5px; color:var(--text-dim);}
+  header .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);flex-shrink:0;}
+  header p{
+    margin:4px 0 0; font-size:12.5px; color:var(--text-dim);
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
 
-  .headActions{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  /* flex:1 + min-width:0 lets this side of the header shrink/truncate
+     instead of pushing the theme toggle off-screen — the toggle itself
+     keeps flex-shrink:0 so it never gets squeezed away, it just always
+     stays fully visible at a fixed size in the same spot. */
+  .headActions{ display:flex; align-items:center; gap:8px; flex:1; min-width:0; }
 
   .hamburger{
     width:42px; height:42px; border-radius:12px;
@@ -216,7 +236,10 @@
     padding:26px 20px 18px; border-bottom:1px solid var(--border);
     display:flex; align-items:center; gap:10px;
   }
-  .drawer-head img{ height:34px; }
+  .drawer-logo{
+    height:38px; width:38px; border-radius:9px; object-fit:contain;
+    flex-shrink:0; background:var(--surface-2);
+  }
   .drawer-head .dtitle{ font-size:15px; font-weight:700; }
   .drawer-head .dsub{ font-size:11px; color:var(--text-dim); }
 
@@ -255,7 +278,7 @@
 <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
   <div class="drawer-head">
-    <div class="dot" style="width:9px;height:9px;"></div>
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhPfflvqi40inPi-P0b1n2GX_gPFq_wxdUWsdcFXtA4jMpFJMUe19h686hwv30rM0RSBcL9ReioYhQM1vwXW0OYKeS9LaL6lcrCs6huHm2rwzM2W_OEAN9yUXcjPRUgFTYfUZIoZoXCz6XBjmrTQTcliLs_VceGhrKT0mIG7853a6q2WdV3G2J2VwhqCs0I/s320/WhatsApp_Image_2026-02-24_at_6.45.34_PM-removebg-preview(2).png" alt="Trading With Ishaan" class="drawer-logo">
     <div>
       <div class="dtitle">TWI Signal Panel</div>
       <div class="dsub">Trading With Ishaan</div>
@@ -279,7 +302,10 @@
       <span class="count" id="drawerSubCount">—</span>
     </div>
   </div>
-  <div class="drawer-foot">Connected directly to your Sheet</div>
+  <div class="drawer-foot">
+    <div>Powered by Admin @ Trading With Ishaan</div>
+    <div style="margin-top:4px">Connected directly to your Sheet</div>
+  </div>
 </div>
 
 <div id="app" class="hidden">
@@ -287,7 +313,7 @@
     <div class="headrow">
       <div class="headActions">
         <button class="hamburger" onclick="openDrawer()"><span></span><span></span><span></span></button>
-        <div>
+        <div class="headTextWrap">
           <h1><span class="dot"></span> <span id="sectionHeading">Live Signals</span></h1>
           <p>Trading With Ishaan — direct to Sheet, no Telegram</p>
         </div>
@@ -542,17 +568,34 @@
     }
   };
 
-  function gfetch(type, params){
+  // Retries once automatically on timeout/network failure before giving
+  // up — Apps Script web apps sometimes cold-start slowly or briefly
+  // queue behind other executions on your account, and a short pause +
+  // one retry clears the large majority of these on its own, instead of
+  // showing you an error you'd have to manually retry.
+  function gfetch(type, params, _attempt){
+    _attempt = _attempt || 1;
     return new Promise(function(resolve, reject){
       var cb = "_gcb" + Date.now() + Math.floor(Math.random()*1000);
       var sc = document.createElement("script");
-      var tm = setTimeout(function(){ cleanup(); reject(new Error("timeout")); }, 12000);
+      // 20s (was 12s) — gives a slow/cold-started Apps Script execution
+      // enough time to actually respond before we give up on it.
+      var tm = setTimeout(function(){ cleanup(); handleFail(new Error("timeout")); }, 20000);
       function cleanup(){ clearTimeout(tm); delete window[cb]; if (sc.parentNode) sc.parentNode.removeChild(sc); }
+      function handleFail(err){
+        if (_attempt < 2) {
+          setTimeout(function(){
+            gfetch(type, params, _attempt + 1).then(resolve).catch(reject);
+          }, 1500);
+        } else {
+          reject(err);
+        }
+      }
       window[cb] = function(d){ cleanup(); resolve(d); };
       var qs = "type=" + encodeURIComponent(type) + "&secret=" + encodeURIComponent(mySecret) + "&callback=" + cb + "&t=" + Date.now();
       Object.keys(params || {}).forEach(function(k){ qs += "&" + k + "=" + encodeURIComponent(params[k]); });
       sc.src = FX_URL + "?" + qs;
-      sc.onerror = function(){ cleanup(); reject(new Error("network")); };
+      sc.onerror = function(){ cleanup(); handleFail(new Error("network")); };
       document.head.appendChild(sc);
     });
   }
