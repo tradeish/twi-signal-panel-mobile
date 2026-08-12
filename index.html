@@ -52,42 +52,27 @@
     background:linear-gradient(180deg,var(--bg) 70%,transparent);
   }
   header .headrow{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  header .titlewrap{ min-width:0; flex:1 1 auto; }
   header h1{
     font-size:19px; margin:0; letter-spacing:0.2px;
     display:flex; align-items:center; gap:8px;
+    overflow-wrap:break-word;
   }
-  header .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
-  header p{margin:4px 0 0; font-size:12.5px; color:var(--text-dim);}
-
-  .headActions{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
-
-  .hamburger{
-    width:42px; height:42px; border-radius:12px;
-    background:var(--surface); border:1px solid var(--border);
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
-    flex-shrink:0;
-  }
-  .hamburger span{ width:19px; height:2px; background:var(--text); border-radius:2px; }
+  header .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);flex-shrink:0;}
+  header p{margin:4px 0 0; font-size:12.5px; color:var(--text-dim); overflow-wrap:break-word;}
+  header .powered-by{margin:2px 0 0; font-size:10.5px; color:var(--text-dim); opacity:0.75;}
+  header .logo-icon{height:22px; width:auto; border-radius:5px; flex-shrink:0;}
 
   .theme-toggle{
-    display:flex; align-items:center; gap:6px;
+    display:flex; align-items:center; gap:4px;
     background:var(--surface); border:1px solid var(--border); border-radius:999px;
-    padding:5px; flex-shrink:0;
+    padding:4px; flex-shrink:0;
   }
   .theme-toggle button{
     border:none; background:transparent; color:var(--text-dim);
-    width:34px; height:30px; border-radius:999px; font-size:15px;
+    width:28px; height:26px; border-radius:999px; font-size:13px;
   }
   .theme-toggle button.active{ background:var(--surface-2); color:var(--text); }
-
-  .sectionTitle{
-    padding:0 18px 10px; display:flex; align-items:center; gap:8px;
-  }
-  .sectionTitle h2{ font-size:16px; margin:0; }
-  .sectionTitle .badge{
-    font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px;
-    background:var(--green-dim); color:var(--green);
-  }
 
   .tabs{
     display:flex; gap:6px; padding:0 18px 14px;
@@ -113,6 +98,8 @@
     text-align:center;
   }
   .pillbtn.selected{ border-color:var(--green); background:var(--green-dim); color:#8ff0b0; }
+  .pillbtn.buy{ }
+  .pillbtn.buy.selected{ border-color:var(--green); background:var(--green-dim); color:#8ff0b0; }
   .pillbtn.sell.selected{ border-color:var(--red); background:var(--red-dim); color:#ff9c9c; }
 
   input[type=number]{
@@ -142,34 +129,11 @@
   .dir.buy{ background:var(--green-dim); color:#8ff0b0; }
   .dir.sell{ background:var(--red-dim); color:#ff9c9c; }
   .active-item .meta{ font-size:12.5px; color:var(--text-dim); margin-top:6px; }
-  .active-item .actions{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
-  .active-item .actions button{ flex:1; min-width:70px; padding:10px; border-radius:9px; border:1px solid var(--border); font-size:13px; font-weight:600; background:var(--surface); color:var(--text); }
+  .active-item .actions{ display:flex; gap:8px; margin-top:12px; }
+  .active-item .actions button{ flex:1; padding:10px; border-radius:9px; border:1px solid var(--border); font-size:13px; font-weight:600; background:var(--surface); color:var(--text); }
   .active-item .actions button.autocheck-on{ border-color:var(--amber); color:var(--amber); }
 
   .empty{ text-align:center; color:var(--text-dim); font-size:13.5px; padding:30px 10px; }
-
-  /* Generic list rows used by Subscribers / API Usage Log / History */
-  .list-item{
-    background:var(--surface-2); border:1px solid var(--border); border-radius:12px;
-    padding:14px; margin-bottom:10px;
-  }
-  .list-item .row1{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
-  .list-item .title{ font-weight:700; font-size:14.5px; word-break:break-all; }
-  .list-item .tag{ font-size:11px; padding:3px 9px; border-radius:20px; font-weight:700; white-space:nowrap; }
-  .tag.tp{ background:var(--green-dim); color:#8ff0b0; }
-  .tag.sl{ background:var(--red-dim); color:#ff9c9c; }
-  .tag.manual{ background:#1a3a8a22; color:var(--blue); }
-  .list-item .meta{ font-size:12.5px; color:var(--text-dim); margin-top:6px; line-height:1.7; }
-  .list-item .meta b{ color:var(--text); font-weight:600; }
-
-  /* Stat cards for API usage */
-  .stat-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .stat-box{
-    background:var(--surface-2); border:1px solid var(--border); border-radius:12px;
-    padding:16px; text-align:center;
-  }
-  .stat-box .num{ font-size:22px; font-weight:800; }
-  .stat-box .lbl{ font-size:11.5px; color:var(--text-dim); margin-top:4px; text-transform:uppercase; letter-spacing:0.4px; }
 
   .toast{
     position:fixed; bottom:24px; left:18px; right:18px; z-index:999;
@@ -196,45 +160,6 @@
   .hidden{ display:none !important; }
   .lockbox{ position:relative; padding:60px 20px; text-align:center; }
   .lockbox input{ width:100%; padding:14px; border-radius:10px; border:1px solid var(--border); background:var(--surface-2); color:var(--text); font-size:16px; text-align:center; margin:16px 0; }
-
-  /* ===== Hamburger slide-in drawer menu ===== */
-  .drawer-overlay{
-    position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:1001;
-    opacity:0; pointer-events:none; transition:opacity 0.25s ease;
-  }
-  .drawer-overlay.show{ opacity:1; pointer-events:auto; }
-
-  .drawer{
-    position:fixed; top:0; left:0; bottom:0; width:78%; max-width:300px; z-index:1002;
-    background:var(--surface); border-right:1px solid var(--border);
-    transform:translateX(-105%); transition:transform 0.28s ease;
-    display:flex; flex-direction:column;
-  }
-  .drawer.show{ transform:translateX(0); }
-
-  .drawer-head{
-    padding:26px 20px 18px; border-bottom:1px solid var(--border);
-    display:flex; align-items:center; gap:10px;
-  }
-  .drawer-head img{ height:34px; }
-  .drawer-head .dtitle{ font-size:15px; font-weight:700; }
-  .drawer-head .dsub{ font-size:11px; color:var(--text-dim); }
-
-  .drawer-nav{ padding:10px 12px; flex:1; overflow-y:auto; }
-  .drawer-item{
-    display:flex; align-items:center; gap:12px;
-    padding:14px 12px; border-radius:12px; margin-bottom:4px;
-    color:var(--text-dim); font-size:14.5px; font-weight:600;
-  }
-  .drawer-item .ico{ font-size:18px; width:22px; text-align:center; }
-  .drawer-item.active{ background:var(--green-dim); color:var(--green); }
-  .drawer-item .count{
-    margin-left:auto; font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px;
-    background:var(--surface-2); color:var(--text-dim);
-  }
-  .drawer-item.active .count{ background:rgba(0,0,0,0.15); color:inherit; }
-
-  .drawer-foot{ padding:16px 18px; border-top:1px solid var(--border); font-size:11px; color:var(--text-dim); text-align:center; }
 </style>
 </head>
 <body>
@@ -251,46 +176,13 @@
   <div id="lockErr" style="color:var(--red);font-size:13px;margin-top:10px;"></div>
 </div>
 
-<!-- ===== Hamburger drawer menu ===== -->
-<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
-<div class="drawer" id="drawer">
-  <div class="drawer-head">
-    <div class="dot" style="width:9px;height:9px;"></div>
-    <div>
-      <div class="dtitle">TWI Signal Panel</div>
-      <div class="dsub">Trading With Ishaan</div>
-    </div>
-  </div>
-  <div class="drawer-nav">
-    <div class="drawer-item active" data-section="live" onclick="goSection('live')">
-      <span class="ico">📡</span><span>Live Signals</span>
-    </div>
-    <div class="drawer-item" data-section="apiusage" onclick="goSection('apiusage')">
-      <span class="ico">📊</span><span>API Usage</span>
-    </div>
-    <div class="drawer-item" data-section="apiusagelog" onclick="goSection('apiusagelog')">
-      <span class="ico">🧾</span><span>API Usage Log</span>
-    </div>
-    <div class="drawer-item" data-section="history" onclick="goSection('history')">
-      <span class="ico">🕘</span><span>History</span>
-    </div>
-    <div class="drawer-item" data-section="subscribers" onclick="goSection('subscribers')">
-      <span class="ico">👥</span><span>Subscribers</span>
-      <span class="count" id="drawerSubCount">—</span>
-    </div>
-  </div>
-  <div class="drawer-foot">Connected directly to your Sheet</div>
-</div>
-
 <div id="app" class="hidden">
   <header>
     <div class="headrow">
-      <div class="headActions">
-        <button class="hamburger" onclick="openDrawer()"><span></span><span></span><span></span></button>
-        <div>
-          <h1><span class="dot"></span> <span id="sectionHeading">Live Signals</span></h1>
-          <p>Trading With Ishaan — direct to Sheet, no Telegram</p>
-        </div>
+      <div class="titlewrap">
+        <h1><img class="logo-icon" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhPfflvqi40inPi-P0b1n2GX_gPFq_wxdUWsdcFXtA4jMpFJMUe19h686hwv30rM0RSBcL9ReioYhQM1vwXW0OYKeS9LaL6lcrCs6huHm2rwzM2W_OEAN9yUXcjPRUgFTYfUZIoZoXCz6XBjmrTQTcliLs_VceGhrKT0mIG7853a6q2WdV3G2J2VwhqCs0I/s320/WhatsApp_Image_2026-02-24_at_6.45.34_PM-removebg-preview(2).png" alt=""><span class="dot"></span> TWI Signal Panel</h1>
+        <p>Trading With Ishaan — direct to Sheet, no Telegram</p>
+        <p class="powered-by">Powered by Admin @ Trading With Ishaan</p>
       </div>
       <div class="theme-toggle" id="themeToggle">
         <button id="btnDark" onclick="setTheme('dark')">🌙</button>
@@ -299,99 +191,57 @@
     </div>
   </header>
 
+  <div class="tabs">
+    <div class="tab active" id="tabNewBtn" onclick="showTab('new')">New Signal</div>
+    <div class="tab" id="tabActiveBtn" onclick="showTab('active')">Active</div>
+  </div>
+
   <main>
-    <!-- ================= SECTION: LIVE SIGNALS ================= -->
-    <div id="secLive">
-      <div class="tabs">
-        <div class="tab active" id="tabNewBtn" onclick="showLiveTab('new')">New Signal</div>
-        <div class="tab" id="tabActiveBtn" onclick="showLiveTab('active')">Active</div>
-      </div>
-
-      <!-- NEW SIGNAL TAB -->
-      <div id="tabNew">
-        <div class="card">
-          <p class="label">Pair</p>
-          <div class="grid2" id="pairGrid"></div>
-        </div>
-
-        <div class="card">
-          <p class="label">Signal Type</p>
-          <div class="grid2">
-            <div class="pillbtn" data-val="SHORT TERM" onclick="selectPill(this,'stype')">Short Term</div>
-            <div class="pillbtn" data-val="LONG TERM" onclick="selectPill(this,'stype')">Long Term</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <p class="label">Direction</p>
-          <div class="grid2">
-            <div class="pillbtn buy" data-val="BUY" onclick="selectPill(this,'action')">🟢 BUY</div>
-            <div class="pillbtn sell" data-val="SELL" onclick="selectPill(this,'action')">🔴 SELL</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="field">
-            <label>Entry Price</label>
-            <input type="number" inputmode="decimal" step="any" id="entryInput" placeholder="e.g. 4032.50">
-          </div>
-          <div class="field">
-            <label>Stop Loss</label>
-            <input type="number" inputmode="decimal" step="any" id="slInput" placeholder="e.g. 4020.00">
-          </div>
-          <div class="field" style="margin-bottom:0">
-            <label>Take Profit</label>
-            <input type="number" inputmode="decimal" step="any" id="tpInput" placeholder="e.g. 4055.00">
-          </div>
-        </div>
-
-        <button class="btn btn-primary" id="reviewBtn" onclick="openReview()">Review & Send</button>
-      </div>
-
-      <!-- ACTIVE TAB -->
-      <div id="tabActive" class="hidden">
-        <div id="activeList"><div class="empty">Loading…</div></div>
-        <button class="btn btn-ghost" onclick="loadActive()">Refresh</button>
-      </div>
-    </div>
-
-    <!-- ================= SECTION: API USAGE ================= -->
-    <div id="secApiUsage" class="hidden">
-      <div class="sectionTitle"><h2>Today's API Usage</h2></div>
+    <!-- NEW SIGNAL TAB -->
+    <div id="tabNew">
       <div class="card">
-        <div class="stat-grid">
-          <div class="stat-box"><div class="num" id="auUsed">—</div><div class="lbl">Credits Used</div></div>
-          <div class="stat-box"><div class="num" id="auRemaining">—</div><div class="lbl">Credits Remaining</div></div>
-        </div>
-        <div class="list-item" style="margin-top:14px;margin-bottom:0">
-          <div class="meta">
-            <div><b>Date (UTC):</b> <span id="auDate">—</span></div>
-            <div><b>Last Updated (UTC):</b> <span id="auLastUpdated">—</span></div>
-          </div>
+        <p class="label">Pair</p>
+        <div class="grid2" id="pairGrid"></div>
+      </div>
+
+      <div class="card">
+        <p class="label">Signal Type</p>
+        <div class="grid2">
+          <div class="pillbtn" data-val="SHORT TERM" onclick="selectPill(this,'stype')">Short Term</div>
+          <div class="pillbtn" data-val="LONG TERM" onclick="selectPill(this,'stype')">Long Term</div>
         </div>
       </div>
-      <button class="btn btn-ghost" onclick="loadApiUsage()">Refresh</button>
+
+      <div class="card">
+        <p class="label">Direction</p>
+        <div class="grid2">
+          <div class="pillbtn buy" data-val="BUY" onclick="selectPill(this,'action')">🟢 BUY</div>
+          <div class="pillbtn sell" data-val="SELL" onclick="selectPill(this,'action')">🔴 SELL</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="field">
+          <label>Entry Price</label>
+          <input type="number" inputmode="decimal" step="any" id="entryInput" placeholder="e.g. 4032.50">
+        </div>
+        <div class="field">
+          <label>Stop Loss</label>
+          <input type="number" inputmode="decimal" step="any" id="slInput" placeholder="e.g. 4020.00">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Take Profit</label>
+          <input type="number" inputmode="decimal" step="any" id="tpInput" placeholder="e.g. 4055.00">
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="reviewBtn" onclick="openReview()">Review & Send</button>
     </div>
 
-    <!-- ================= SECTION: API USAGE LOG ================= -->
-    <div id="secApiUsageLog" class="hidden">
-      <div class="sectionTitle"><h2>API Usage Log</h2><span class="badge" id="logCountBadge">0</span></div>
-      <div id="apiLogList"><div class="empty">Loading…</div></div>
-      <button class="btn btn-ghost" onclick="loadApiUsageLog()">Refresh</button>
-    </div>
-
-    <!-- ================= SECTION: HISTORY ================= -->
-    <div id="secHistory" class="hidden">
-      <div class="sectionTitle"><h2>Closed Trade History</h2><span class="badge" id="histCountBadge">0</span></div>
-      <div id="historyList"><div class="empty">Loading…</div></div>
-      <button class="btn btn-ghost" onclick="loadHistory()">Refresh</button>
-    </div>
-
-    <!-- ================= SECTION: SUBSCRIBERS ================= -->
-    <div id="secSubscribers" class="hidden">
-      <div class="sectionTitle"><h2>Subscribers</h2><span class="badge" id="subCountBadge">0</span></div>
-      <div id="subscriberList"><div class="empty">Loading…</div></div>
-      <button class="btn btn-ghost" onclick="loadSubscribers()">Refresh</button>
+    <!-- ACTIVE TAB -->
+    <div id="tabActive" class="hidden">
+      <div id="activeList"><div class="empty">Loading…</div></div>
+      <button class="btn btn-ghost" onclick="loadActive()">Refresh</button>
     </div>
   </main>
 </div>
@@ -473,19 +323,10 @@
     EURGBP:"EUR/GBP", CADJPY:"CAD/JPY", NZDJPY:"NZD/JPY"
   };
 
-  var SECTION_TITLES = {
-    live: "Live Signals",
-    apiusage: "API Usage",
-    apiusagelog: "API Usage Log",
-    history: "History",
-    subscribers: "Subscribers"
-  };
-
   var mySecret = localStorage.getItem("twi_admin_secret") || "";
   var selectedPair = null, selectedType = null, selectedAction = null;
   var closeTargetRow = null;
   var editTargetRow = null;
-  var currentSection = "live";
 
   function setTheme(mode){
     document.documentElement.setAttribute("data-theme", mode);
@@ -526,7 +367,6 @@
       document.getElementById("app").classList.remove("hidden");
       initPairGrid();
       loadActive();
-      refreshSubCountBadgeQuiet(); // populate the drawer's subscriber count in the background
     }).catch(function(){
       document.getElementById("lockErr").textContent = "Couldn't reach the server. Check your connection.";
     });
@@ -542,7 +382,7 @@
     }
   };
 
-  function gfetch(type, params){
+  function gfetchOnce_(type, params){
     return new Promise(function(resolve, reject){
       var cb = "_gcb" + Date.now() + Math.floor(Math.random()*1000);
       var sc = document.createElement("script");
@@ -557,6 +397,22 @@
     });
   }
 
+  // Apps Script Web Apps occasionally have a brief, transient hiccup (a
+  // couple seconds of slowness or a dropped request) that clears up on
+  // its own — this retries silently before ever surfacing an error to
+  // the user, so a one-off blip doesn't show as "network error" for
+  // something that would have worked a second later anyway.
+  function gfetch(type, params){
+    var delays = [0, 1000, 2000]; // immediate, then 1s, then 2s before giving up
+    function attempt(i){
+      return gfetchOnce_(type, params).catch(function(err){
+        if (i >= delays.length - 1) throw err; // out of retries — surface the real error
+        return new Promise(function(res){ setTimeout(res, delays[i+1]); }).then(function(){ return attempt(i+1); });
+      });
+    }
+    return attempt(0);
+  }
+
   function showToast(msg, type){
     var t = document.getElementById("toast");
     t.textContent = msg;
@@ -564,40 +420,7 @@
     setTimeout(function(){ t.className = "toast " + (type || ""); }, 2600);
   }
 
-  /* ===================== HAMBURGER DRAWER ===================== */
-  function openDrawer(){
-    document.getElementById("drawer").classList.add("show");
-    document.getElementById("drawerOverlay").classList.add("show");
-  }
-  function closeDrawer(){
-    document.getElementById("drawer").classList.remove("show");
-    document.getElementById("drawerOverlay").classList.remove("show");
-  }
-
-  function goSection(name){
-    currentSection = name;
-    closeDrawer();
-
-    ["secLive","secApiUsage","secApiUsageLog","secHistory","secSubscribers"].forEach(function(id){
-      document.getElementById(id).classList.add("hidden");
-    });
-    var map = { live:"secLive", apiusage:"secApiUsage", apiusagelog:"secApiUsageLog", history:"secHistory", subscribers:"secSubscribers" };
-    document.getElementById(map[name]).classList.remove("hidden");
-
-    document.querySelectorAll(".drawer-item").forEach(function(el){
-      el.classList.toggle("active", el.dataset.section === name);
-    });
-    document.getElementById("sectionHeading").textContent = SECTION_TITLES[name] || "TWI Signal Panel";
-
-    if (name === "live") loadActive();
-    else if (name === "apiusage") loadApiUsage();
-    else if (name === "apiusagelog") loadApiUsageLog();
-    else if (name === "history") loadHistory();
-    else if (name === "subscribers") loadSubscribers();
-  }
-
-  /* ===================== LIVE SIGNALS (unchanged behavior) ===================== */
-  function showLiveTab(name){
+  function showTab(name){
     document.getElementById("tabNew").classList.toggle("hidden", name !== "new");
     document.getElementById("tabActive").classList.toggle("hidden", name !== "active");
     document.getElementById("tabNewBtn").classList.toggle("active", name === "new");
@@ -793,115 +616,6 @@
         showToast((d && d.error) ? d.error : "Failed to toggle.", "err");
       }
     }).catch(function(){ btn.disabled = false; showToast("Network error.", "err"); });
-  }
-
-  /* ===================== API USAGE ===================== */
-  function loadApiUsage(){
-    document.getElementById("auUsed").textContent = "…";
-    document.getElementById("auRemaining").textContent = "…";
-    document.getElementById("auDate").textContent = "…";
-    document.getElementById("auLastUpdated").textContent = "…";
-    gfetch("admin_api_usage", {}).then(function(d){
-      if (!d || d.status !== "ok"){ showToast((d && d.error) ? d.error : "Couldn't load API usage.", "err"); return; }
-      document.getElementById("auUsed").textContent = d.creditsUsed;
-      document.getElementById("auRemaining").textContent = d.creditsRemaining;
-      document.getElementById("auDate").textContent = d.date || "—";
-      document.getElementById("auLastUpdated").textContent = d.lastUpdated || "—";
-    }).catch(function(){ showToast("Network error.", "err"); });
-  }
-
-  /* ===================== API USAGE LOG ===================== */
-  function loadApiUsageLog(){
-    var list = document.getElementById("apiLogList");
-    list.innerHTML = "<div class='empty'>Loading…</div>";
-    gfetch("admin_api_usage_log", {}).then(function(d){
-      if (!d || d.status !== "ok"){ list.innerHTML = "<div class='empty'>Couldn't load.</div>"; return; }
-      document.getElementById("logCountBadge").textContent = d.log.length;
-      if (!d.log.length){ list.innerHTML = "<div class='empty'>No API usage logged yet.</div>"; return; }
-      list.innerHTML = "";
-      d.log.forEach(function(row){
-        var label = PAIRS[row.pair] || row.pair;
-        var div = document.createElement("div");
-        div.className = "list-item";
-        div.innerHTML =
-          "<div class='row1'><span class='title'>" + label + "</span>" +
-          "<span class='tag manual'>" + row.creditsUsed + " credits</span></div>" +
-          "<div class='meta'>" +
-          "<div><b>Date (UTC):</b> " + row.date + "</div>" +
-          "<div><b>Last Updated (UTC):</b> " + row.lastUpdated + "</div>" +
-          "</div>";
-        list.appendChild(div);
-      });
-    }).catch(function(){ list.innerHTML = "<div class='empty'>Network error.</div>"; });
-  }
-
-  /* ===================== HISTORY ===================== */
-  function loadHistory(){
-    var list = document.getElementById("historyList");
-    list.innerHTML = "<div class='empty'>Loading…</div>";
-    gfetch("admin_history", {}).then(function(d){
-      if (!d || d.status !== "ok"){ list.innerHTML = "<div class='empty'>Couldn't load.</div>"; return; }
-      document.getElementById("histCountBadge").textContent = d.history.length;
-      if (!d.history.length){ list.innerHTML = "<div class='empty'>No closed trades yet.</div>"; return; }
-      list.innerHTML = "";
-      d.history.forEach(function(h){
-        var label = PAIRS[h.pair] || h.pair;
-        var tagClass = "manual";
-        if (h.result.indexOf("TP") !== -1) tagClass = "tp";
-        else if (h.result.indexOf("SL") !== -1) tagClass = "sl";
-        var div = document.createElement("div");
-        div.className = "list-item";
-        div.innerHTML =
-          "<div class='row1'><span class='title'>" + label + " · " + h.action + "</span>" +
-          "<span class='tag " + tagClass + "'>" + h.result + "</span></div>" +
-          "<div class='meta'>" +
-          "<div><b>Entry:</b> " + h.entry + " &nbsp; <b>Close:</b> " + h.closePrice + "</div>" +
-          "<div><b>Pips:</b> " + h.pips + " &nbsp; <b>Gain/Loss:</b> " + h.gainLoss + "</div>" +
-          "<div><b>Opened:</b> " + h.openTime + "</div>" +
-          "<div><b>Closed:</b> " + h.closeDateTime + "</div>" +
-          "</div>";
-        list.appendChild(div);
-      });
-    }).catch(function(){ list.innerHTML = "<div class='empty'>Network error.</div>"; });
-  }
-
-  /* ===================== SUBSCRIBERS ===================== */
-  function loadSubscribers(){
-    var list = document.getElementById("subscriberList");
-    list.innerHTML = "<div class='empty'>Loading…</div>";
-    gfetch("admin_subscribers", {}).then(function(d){
-      if (!d || d.status !== "ok"){ list.innerHTML = "<div class='empty'>Couldn't load.</div>"; return; }
-      document.getElementById("subCountBadge").textContent = d.count;
-      document.getElementById("drawerSubCount").textContent = d.count;
-      if (!d.count){ list.innerHTML = "<div class='empty'>No subscribers yet.</div>"; return; }
-      list.innerHTML = "";
-      d.subscribers.forEach(function(s){
-        var div = document.createElement("div");
-        div.className = "list-item";
-        div.innerHTML =
-          "<div class='row1'><span class='title'>" + s.email + "</span></div>" +
-          "<div class='meta'>" +
-          "<div><b>Subscribed:</b> " + (s.subscribedAt || "—") + "</div>" +
-          "<div><b>Country:</b> " + (s.country || "Unknown") + " &nbsp; <b>City:</b> " + (s.city || "Unknown") + "</div>" +
-          "<div><b>IP:</b> " + (s.ip || "Unknown") + "</div>" +
-          "<div><b>Device:</b> " + (s.device || "Unknown") + "</div>" +
-          "<div><b>Timezone:</b> " + (s.timezone || "Unknown") + "</div>" +
-          "</div>";
-        list.appendChild(div);
-      });
-    }).catch(function(){ list.innerHTML = "<div class='empty'>Network error.</div>"; });
-  }
-
-  // Quietly populates just the drawer's subscriber count badge right after
-  // unlock, so the number is already there the first time the drawer opens
-  // (without forcing the user to visit the Subscribers tab first).
-  function refreshSubCountBadgeQuiet(){
-    gfetch("admin_subscribers", {}).then(function(d){
-      if (d && d.status === "ok"){
-        document.getElementById("drawerSubCount").textContent = d.count;
-        document.getElementById("subCountBadge").textContent = d.count;
-      }
-    }).catch(function(){});
   }
 </script>
 </body>
