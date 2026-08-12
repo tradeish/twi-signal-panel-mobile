@@ -51,26 +51,22 @@
     position:sticky; top:0; z-index:10;
     background:linear-gradient(180deg,var(--bg) 70%,transparent);
   }
-  header .headrow{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
-  header .titlewrap{ min-width:0; flex:1 1 auto; }
+  header .headrow{ display:flex; justify-content:space-between; align-items:flex-start; }
   header h1{
     font-size:19px; margin:0; letter-spacing:0.2px;
     display:flex; align-items:center; gap:8px;
-    overflow-wrap:break-word;
   }
-  header .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);flex-shrink:0;}
-  header p{margin:4px 0 0; font-size:12.5px; color:var(--text-dim); overflow-wrap:break-word;}
-  header .powered-by{margin:2px 0 0; font-size:10.5px; color:var(--text-dim); opacity:0.75;}
-  header .logo-icon{height:22px; width:auto; border-radius:5px; flex-shrink:0;}
+  header .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
+  header p{margin:4px 0 0; font-size:12.5px; color:var(--text-dim);}
 
   .theme-toggle{
-    display:flex; align-items:center; gap:4px;
+    display:flex; align-items:center; gap:6px;
     background:var(--surface); border:1px solid var(--border); border-radius:999px;
-    padding:4px; flex-shrink:0;
+    padding:5px; flex-shrink:0;
   }
   .theme-toggle button{
     border:none; background:transparent; color:var(--text-dim);
-    width:28px; height:26px; border-radius:999px; font-size:13px;
+    width:34px; height:30px; border-radius:999px; font-size:15px;
   }
   .theme-toggle button.active{ background:var(--surface-2); color:var(--text); }
 
@@ -166,8 +162,8 @@
 
 <div id="lockScreen" class="lockbox hidden">
   <div class="theme-toggle" style="position:absolute;top:18px;right:18px;">
-    <button id="btnDarkLock" onclick="setTheme('dark')">🌙</button>
-    <button id="btnLightLock" onclick="setTheme('light')">☀️</button>
+    <button id="btnDarkLock" onclick="setTheme('dark')">ðŸŒ™</button>
+    <button id="btnLightLock" onclick="setTheme('light')">â˜€ï¸</button>
   </div>
   <div class="dot" style="margin:0 auto 16px;width:10px;height:10px;"></div>
   <div style="font-size:15px;color:var(--text-dim)">Enter your admin passcode</div>
@@ -179,14 +175,13 @@
 <div id="app" class="hidden">
   <header>
     <div class="headrow">
-      <div class="titlewrap">
-        <h1><img class="logo-icon" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhPfflvqi40inPi-P0b1n2GX_gPFq_wxdUWsdcFXtA4jMpFJMUe19h686hwv30rM0RSBcL9ReioYhQM1vwXW0OYKeS9LaL6lcrCs6huHm2rwzM2W_OEAN9yUXcjPRUgFTYfUZIoZoXCz6XBjmrTQTcliLs_VceGhrKT0mIG7853a6q2WdV3G2J2VwhqCs0I/s320/WhatsApp_Image_2026-02-24_at_6.45.34_PM-removebg-preview(2).png" alt=""><span class="dot"></span> TWI Signal Panel</h1>
-        <p>Trading With Ishaan — direct to Sheet, no Telegram</p>
-        <p class="powered-by">Powered by Admin @ Trading With Ishaan</p>
+      <div>
+        <h1><span class="dot"></span> TWI Signal Panel</h1>
+        <p>Trading With Ishaan â€” direct to Sheet, no Telegram</p>
       </div>
       <div class="theme-toggle" id="themeToggle">
-        <button id="btnDark" onclick="setTheme('dark')">🌙</button>
-        <button id="btnLight" onclick="setTheme('light')">☀️</button>
+        <button id="btnDark" onclick="setTheme('dark')">ðŸŒ™</button>
+        <button id="btnLight" onclick="setTheme('light')">â˜€ï¸</button>
       </div>
     </div>
   </header>
@@ -215,8 +210,8 @@
       <div class="card">
         <p class="label">Direction</p>
         <div class="grid2">
-          <div class="pillbtn buy" data-val="BUY" onclick="selectPill(this,'action')">🟢 BUY</div>
-          <div class="pillbtn sell" data-val="SELL" onclick="selectPill(this,'action')">🔴 SELL</div>
+          <div class="pillbtn buy" data-val="BUY" onclick="selectPill(this,'action')">ðŸŸ¢ BUY</div>
+          <div class="pillbtn sell" data-val="SELL" onclick="selectPill(this,'action')">ðŸ”´ SELL</div>
         </div>
       </div>
 
@@ -240,7 +235,7 @@
 
     <!-- ACTIVE TAB -->
     <div id="tabActive" class="hidden">
-      <div id="activeList"><div class="empty">Loading…</div></div>
+      <div id="activeList"><div class="empty">Loadingâ€¦</div></div>
       <button class="btn btn-ghost" onclick="loadActive()">Refresh</button>
     </div>
   </main>
@@ -249,13 +244,13 @@
 <div class="overlay" id="reviewOverlay">
   <div class="sheet">
     <h3>Confirm new signal</h3>
-    <div class="summary-row"><span>Pair</span><span id="rvPair">—</span></div>
-    <div class="summary-row"><span>Type</span><span id="rvType">—</span></div>
-    <div class="summary-row"><span>Direction</span><span id="rvDir">—</span></div>
-    <div class="summary-row"><span>Entry</span><span id="rvEntry">—</span></div>
-    <div class="summary-row"><span>Stop Loss</span><span id="rvSl">—</span></div>
-    <div class="summary-row"><span>Take Profit</span><span id="rvTp">—</span></div>
-    <button class="btn btn-primary" style="margin-top:18px" onclick="submitSignal()">✅ Confirm & Send</button>
+    <div class="summary-row"><span>Pair</span><span id="rvPair">â€”</span></div>
+    <div class="summary-row"><span>Type</span><span id="rvType">â€”</span></div>
+    <div class="summary-row"><span>Direction</span><span id="rvDir">â€”</span></div>
+    <div class="summary-row"><span>Entry</span><span id="rvEntry">â€”</span></div>
+    <div class="summary-row"><span>Stop Loss</span><span id="rvSl">â€”</span></div>
+    <div class="summary-row"><span>Take Profit</span><span id="rvTp">â€”</span></div>
+    <button class="btn btn-primary" style="margin-top:18px" onclick="submitSignal()">âœ… Confirm & Send</button>
     <button class="btn btn-ghost" onclick="closeOverlay('reviewOverlay')">Cancel</button>
   </div>
 </div>
@@ -295,7 +290,7 @@
 <div class="overlay" id="modifyOverlay">
   <div class="sheet">
     <h3 id="modifyTitle">Notify: signal modified</h3>
-    <p style="font-size:13px;color:#888;margin:-6px 0 16px">Change SL/TP first using <b>Edit</b> (that stays silent). Once you're ready to announce it, send the update below — this emails and pings subscribers on Telegram right now.</p>
+    <p style="font-size:13px;color:#888;margin:-6px 0 16px">Change SL/TP first using <b>Edit</b> (that stays silent). Once you're ready to announce it, send the update below â€” this emails and pings subscribers on Telegram right now.</p>
     <div class="field">
       <label>Current Stop Loss</label>
       <input type="text" id="modifySlDisplay" readonly>
@@ -312,7 +307,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  // ===== SETUP — same Web App URL your site already uses =====
+  // ===== SETUP â€” same Web App URL your site already uses =====
   var FX_URL = "https://script.google.com/macros/s/AKfycbx_SNdibXwwzJj7A4ZG-LKHHLvTO8PgfWt65jAwwg7KwQ3RvPfJ4B4VK6VJPYDhi_kB/exec";
 
   var PAIRS = {
@@ -349,7 +344,7 @@
   function unlockPanel(){
     var v = document.getElementById("secretInput").value.trim();
     if (!v){ document.getElementById("lockErr").textContent = "Enter a passcode."; return; }
-    // We don't know if it's correct yet — save it, try a real call, and
+    // We don't know if it's correct yet â€” save it, try a real call, and
     // if the server says "unauthorized" we'll ask again.
     mySecret = v;
     localStorage.setItem("twi_admin_secret", v);
@@ -359,7 +354,7 @@
   function verifyThenEnter(){
     gfetch("admin_active", {}).then(function(d){
       if (d && d.error === "unauthorized"){
-        document.getElementById("lockErr").textContent = "Wrong passcode — try again.";
+        document.getElementById("lockErr").textContent = "Wrong passcode â€” try again.";
         localStorage.removeItem("twi_admin_secret");
         return;
       }
@@ -382,7 +377,7 @@
     }
   };
 
-  function gfetchOnce_(type, params){
+  function gfetch(type, params){
     return new Promise(function(resolve, reject){
       var cb = "_gcb" + Date.now() + Math.floor(Math.random()*1000);
       var sc = document.createElement("script");
@@ -395,22 +390,6 @@
       sc.onerror = function(){ cleanup(); reject(new Error("network")); };
       document.head.appendChild(sc);
     });
-  }
-
-  // Apps Script Web Apps occasionally have a brief, transient hiccup (a
-  // couple seconds of slowness or a dropped request) that clears up on
-  // its own — this retries silently before ever surfacing an error to
-  // the user, so a one-off blip doesn't show as "network error" for
-  // something that would have worked a second later anyway.
-  function gfetch(type, params){
-    var delays = [0, 1000, 2000]; // immediate, then 1s, then 2s before giving up
-    function attempt(i){
-      return gfetchOnce_(type, params).catch(function(err){
-        if (i >= delays.length - 1) throw err; // out of retries — surface the real error
-        return new Promise(function(res){ setTimeout(res, delays[i+1]); }).then(function(){ return attempt(i+1); });
-      });
-    }
-    return attempt(0);
   }
 
   function showToast(msg, type){
@@ -472,17 +451,17 @@
 
   function submitSignal(){
     var btn = event.target;
-    btn.disabled = true; btn.textContent = "Sending…";
+    btn.disabled = true; btn.textContent = "Sendingâ€¦";
     gfetch("admin_new_signal", {
       pair: selectedPair, stype: selectedType, action: selectedAction,
       entry: document.getElementById("entryInput").value,
       sl: document.getElementById("slInput").value,
       tp: document.getElementById("tpInput").value
     }).then(function(d){
-      btn.disabled = false; btn.textContent = "✅ Confirm & Send";
+      btn.disabled = false; btn.textContent = "âœ… Confirm & Send";
       if (d && d.status === "ok"){
         closeOverlay("reviewOverlay");
-        showToast("Signal sent — live now.", "ok");
+        showToast("Signal sent â€” live now.", "ok");
         document.getElementById("entryInput").value = "";
         document.getElementById("slInput").value = "";
         document.getElementById("tpInput").value = "";
@@ -492,8 +471,8 @@
         showToast((d && d.error) ? d.error : "Something went wrong.", "err");
       }
     }).catch(function(){
-      btn.disabled = false; btn.textContent = "✅ Confirm & Send";
-      showToast("Network error — try again.", "err");
+      btn.disabled = false; btn.textContent = "âœ… Confirm & Send";
+      showToast("Network error â€” try again.", "err");
     });
   }
 
@@ -510,7 +489,7 @@
         div.innerHTML =
           "<div class='row1'><span class='pair'>" + label + "</span>" +
           "<span class='dir " + (a.action === "BUY" ? "buy" : "sell") + "'>" + a.action + "</span></div>" +
-          "<div class='meta'>Entry " + a.entry + " · SL " + a.sl + " · TP " + a.tp + "</div>" +
+          "<div class='meta'>Entry " + a.entry + " Â· SL " + a.sl + " Â· TP " + a.tp + "</div>" +
           "<div class='actions'>" +
           "<button onclick='promptEdit(" + a.row + ",\"" + label + "\"," + a.entry + "," + a.sl + "," + a.tp + ")'>Edit</button>" +
           "<button onclick='promptModify(" + a.row + ",\"" + label + "\"," + a.sl + "," + a.tp + ")'>Notify Modify</button>" +
@@ -537,7 +516,7 @@
     var tp = document.getElementById("editTpInput").value;
     if (!entry || !sl || !tp){ showToast("Fill in Entry, SL and TP.", "err"); return; }
     var btn = event.target;
-    btn.disabled = true; btn.textContent = "Saving…";
+    btn.disabled = true; btn.textContent = "Savingâ€¦";
     gfetch("admin_modify_signal", { row: editTargetRow, entry: entry, sl: sl, tp: tp }).then(function(d){
       btn.disabled = false; btn.textContent = "Save Changes";
       if (d && d.status === "ok"){
@@ -549,12 +528,12 @@
       }
     }).catch(function(){
       btn.disabled = false; btn.textContent = "Save Changes";
-      showToast("Network error — try again.", "err");
+      showToast("Network error â€” try again.", "err");
     });
   }
 
   function promptModify(row, label, sl, tp){
-    editTargetRow = row; // reused across Edit/Modify overlays — only one is ever open at a time
+    editTargetRow = row; // reused across Edit/Modify overlays â€” only one is ever open at a time
     document.getElementById("modifyTitle").textContent = "Notify: " + label + " modified";
     document.getElementById("modifySlDisplay").value = sl;
     document.getElementById("modifyTpDisplay").value = tp;
@@ -563,7 +542,7 @@
 
   function submitNotifyModify(){
     var btn = event.target;
-    btn.disabled = true; btn.textContent = "Sending…";
+    btn.disabled = true; btn.textContent = "Sendingâ€¦";
     gfetch("admin_notify_modify", { row: editTargetRow }).then(function(d){
       btn.disabled = false; btn.textContent = "Send Notification Now";
       if (d && d.status === "ok"){
@@ -574,7 +553,7 @@
       }
     }).catch(function(){
       btn.disabled = false; btn.textContent = "Send Notification Now";
-      showToast("Network error — try again.", "err");
+      showToast("Network error â€” try again.", "err");
     });
   }
 
@@ -589,19 +568,19 @@
     var price = document.getElementById("closePriceInput").value;
     if (!price){ showToast("Enter a close price.", "err"); return; }
     var btn = event.target;
-    btn.disabled = true; btn.textContent = "Closing…";
+    btn.disabled = true; btn.textContent = "Closingâ€¦";
     gfetch("admin_close", { row: closeTargetRow, price: price }).then(function(d){
       btn.disabled = false; btn.textContent = "Confirm Close";
       if (d && d.status === "ok"){
         closeOverlay("closeOverlay");
-        showToast("Closed — history updated.", "ok");
+        showToast("Closed â€” history updated.", "ok");
         loadActive();
       } else {
         showToast((d && d.error) ? d.error : "Something went wrong.", "err");
       }
     }).catch(function(){
       btn.disabled = false; btn.textContent = "Confirm Close";
-      showToast("Network error — try again.", "err");
+      showToast("Network error â€” try again.", "err");
     });
   }
 
