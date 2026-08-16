@@ -725,10 +725,11 @@
       list.innerHTML = "";
       d.active.forEach(function(a){
         var label = PAIRS[a.pair] || a.pair;
+        var typeLabel = a.type ? a.type.charAt(0) + a.type.slice(1).toLowerCase() : "";
         var div = document.createElement("div");
         div.className = "active-item";
         div.innerHTML =
-          "<div class='row1'><span class='pair'>" + label + "</span>" +
+          "<div class='row1'><span class='pair'>" + label + (typeLabel ? " · " + typeLabel : "") + "</span>" +
           "<span class='dir " + (a.action === "BUY" ? "buy" : "sell") + "'>" + a.action + "</span></div>" +
           "<div class='meta'>Entry " + a.entry + " · SL " + a.sl + " · TP " + a.tp + "</div>" +
           "<div class='actions'>" +
