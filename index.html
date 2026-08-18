@@ -301,6 +301,10 @@
       <span class="ico">👥</span><span>Subscribers</span>
       <span class="count" id="drawerSubCount">—</span>
     </div>
+    <div class="drawer-item" data-section="reviews" onclick="goSection('reviews')">
+      <span class="ico">⭐</span><span>Reviews</span>
+      <span class="count" id="drawerRvCount">—</span>
+    </div>
   </div>
   <div class="drawer-foot">
     <div>Powered by Admin @ Trading With Ishaan</div>
@@ -419,6 +423,13 @@
       <div id="subscriberList"><div class="empty">Loading…</div></div>
       <button class="btn btn-ghost" onclick="loadSubscribers()">Refresh</button>
     </div>
+
+    <!-- ================= SECTION: REVIEWS ================= -->
+    <div id="secReviews" class="hidden">
+      <div class="sectionTitle"><h2>Pending Reviews</h2><span class="badge" id="rvCountBadge">0</span></div>
+      <div id="reviewList"><div class="empty">Loading…</div></div>
+      <button class="btn btn-ghost" onclick="loadReviews()">Refresh</button>
+    </div>
   </main>
 </div>
 
@@ -504,7 +515,8 @@
     apiusage: "API Usage",
     apiusagelog: "API Usage Log",
     history: "History",
-    subscribers: "Subscribers"
+    subscribers: "Subscribers",
+    reviews: "Pending Reviews"
   };
 
   var mySecret = localStorage.getItem("twi_admin_secret") || "";
@@ -553,6 +565,7 @@
       initPairGrid();
       loadActive();
       refreshSubCountBadgeQuiet(); // populate the drawer's subscriber count in the background
+      refreshRvCountBadgeQuiet(); // populate the drawer's pending-review count in the background
     }).catch(function(){
       document.getElementById("lockErr").textContent = "Couldn't reach the server. Check your connection.";
     });
@@ -621,10 +634,10 @@
     currentSection = name;
     closeDrawer();
 
-    ["secLive","secApiUsage","secApiUsageLog","secHistory","secSubscribers"].forEach(function(id){
+    ["secLive","secApiUsage","secApiUsageLog","secHistory","secSubscribers","secReviews"].forEach(function(id){
       document.getElementById(id).classList.add("hidden");
     });
-    var map = { live:"secLive", apiusage:"secApiUsage", apiusagelog:"secApiUsageLog", history:"secHistory", subscribers:"secSubscribers" };
+    var map = { live:"secLive", apiusage:"secApiUsage", apiusagelog:"secApiUsageLog", history:"secHistory", subscribers:"secSubscribers", reviews:"secReviews" };
     document.getElementById(map[name]).classList.remove("hidden");
 
     document.querySelectorAll(".drawer-item").forEach(function(el){
@@ -637,6 +650,7 @@
     else if (name === "apiusagelog") loadApiUsageLog();
     else if (name === "history") loadHistory();
     else if (name === "subscribers") loadSubscribers();
+    else if (name === "reviews") loadReviews();
   }
 
   /* ===================== LIVE SIGNALS (unchanged behavior) ===================== */
@@ -945,6 +959,75 @@
       if (d && d.status === "ok"){
         document.getElementById("drawerSubCount").textContent = d.count;
         document.getElementById("subCountBadge").textContent = d.count;
+      }
+    }).catch(function(){});
+  }
+
+  /* ===================== REVIEWS ===================== */
+  function loadReviews(){
+    var list = document.getElementById("reviewList");
+    list.innerHTML = "<div class='empty'>Loading…</div>";
+    gfetch("admin_reviews_pending", {}).then(function(d){
+      if (!d || d.status !== "ok"){ list.innerHTML = "<div class='empty'>Couldn't load.</div>"; return; }
+      document.getElementById("rvCountBadge").textContent = d.pending.length;
+      document.getElementById("drawerRvCount").textContent = d.pending.length;
+      if (!d.pending.length){ list.innerHTML = "<div class='empty'>No pending reviews.</div>"; return; }
+      list.innerHTML = "";
+      d.pending.forEach(function(r){
+        var stars = "";
+        for (var i=1;i<=5;i++){ stars += (i<=r.rating ? "★" : "☆"); }
+        var div = document.createElement("div");
+        div.className = "list-item";
+        div.innerHTML =
+          "<div class='row1'><span class='title'>" + r.name + "</span>" +
+          "<span class='tag manual'>" + stars + "</span></div>" +
+          "<div class='meta'>" +
+          "<div style='color:var(--text);margin:4px 0 8px;line-height:1.6'>" + r.text + "</div>" +
+          "<div><b>Google Email:</b> " + r.email + "</div>" +
+          "<div><b>Submitted:</b> " + r.timestamp + "</div>" +
+          "<div><b>Country:</b> " + (r.country || "Unknown") + " &nbsp; <b>City:</b> " + (r.city || "Unknown") + "</div>" +
+          "<div><b>IP:</b> " + (r.ip || "Unknown") + "</div>" +
+          "<div><b>Device:</b> " + (r.device || "Unknown") + "</div>" +
+          "<div><b>Timezone:</b> " + (r.timezone || "Unknown") + "</div>" +
+          "<div><b>Operator/ISP:</b> " + (r.isp || "Unknown") + "</div>" +
+          "</div>" +
+          "<div class='actions'>" +
+          "<button onclick='moderateReview(" + r.row + ",\"approve\",this)' style='border-color:var(--green);color:var(--green)'>Approve</button>" +
+          "<button onclick='moderateReview(" + r.row + ",\"reject\",this)' style='border-color:var(--red);color:var(--red)'>Reject</button>" +
+          "</div>";
+        list.appendChild(div);
+      });
+    }).catch(function(){ list.innerHTML = "<div class='empty'>Network error.</div>"; });
+  }
+
+  function moderateReview(row, action, btn){
+    var card = btn.closest(".list-item");
+    var buttons = card.querySelectorAll("button");
+    buttons.forEach(function(b){ b.disabled = true; });
+    gfetch("admin_review_action", { row: row, action: action }).then(function(d){
+      if (d && d.status === "ok"){
+        showToast(action === "approve" ? "Review approved." : "Review rejected.", "ok");
+        card.remove();
+        var remaining = document.querySelectorAll("#reviewList .list-item").length;
+        document.getElementById("rvCountBadge").textContent = remaining;
+        document.getElementById("drawerRvCount").textContent = remaining;
+        if (!remaining) document.getElementById("reviewList").innerHTML = "<div class='empty'>No pending reviews.</div>";
+      } else {
+        buttons.forEach(function(b){ b.disabled = false; });
+        showToast((d && d.message) ? d.message : "Something went wrong.", "err");
+      }
+    }).catch(function(){
+      buttons.forEach(function(b){ b.disabled = false; });
+      showToast("Network error — try again.", "err");
+    });
+  }
+
+  // Quietly populates the drawer's pending-review count badge right after
+  // unlock, same pattern as refreshSubCountBadgeQuiet above.
+  function refreshRvCountBadgeQuiet(){
+    gfetch("admin_reviews_pending", {}).then(function(d){
+      if (d && d.status === "ok"){
+        document.getElementById("drawerRvCount").textContent = d.pending.length;
       }
     }).catch(function(){});
   }
