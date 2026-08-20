@@ -426,7 +426,12 @@
 
     <!-- ================= SECTION: REVIEWS ================= -->
     <div id="secReviews" class="hidden">
-      <div class="sectionTitle"><h2>Pending Reviews</h2><span class="badge" id="rvCountBadge">0</span></div>
+      <div class="tabs">
+        <div class="tab active" id="rvTabPendingBtn" onclick="showReviewTab('pending')">Pending</div>
+        <div class="tab" id="rvTabApprovedBtn" onclick="showReviewTab('approved')">Approved</div>
+        <div class="tab" id="rvTabRejectedBtn" onclick="showReviewTab('rejected')">Rejected</div>
+      </div>
+      <div class="sectionTitle"><h2 id="rvSectionTitle">Pending Reviews</h2><span class="badge" id="rvCountBadge">0</span></div>
       <div id="reviewList"><div class="empty">Loading…</div></div>
       <button class="btn btn-ghost" onclick="loadReviews()">Refresh</button>
     </div>
@@ -964,40 +969,73 @@
   }
 
   /* ===================== REVIEWS ===================== */
+  var currentReviewTab = "pending";
+
+  function showReviewTab(tab){
+    currentReviewTab = tab;
+    document.getElementById("rvTabPendingBtn").classList.toggle("active", tab === "pending");
+    document.getElementById("rvTabApprovedBtn").classList.toggle("active", tab === "approved");
+    document.getElementById("rvTabRejectedBtn").classList.toggle("active", tab === "rejected");
+    var titles = { pending: "Pending Reviews", approved: "Approved Reviews", rejected: "Rejected Reviews" };
+    document.getElementById("rvSectionTitle").textContent = titles[tab];
+    loadReviews();
+  }
+
   function loadReviews(){
     var list = document.getElementById("reviewList");
     list.innerHTML = "<div class='empty'>Loading…</div>";
-    gfetch("admin_reviews_pending", {}).then(function(d){
-      if (!d || d.status !== "ok"){ list.innerHTML = "<div class='empty'>Couldn't load.</div>"; return; }
-      document.getElementById("rvCountBadge").textContent = d.pending.length;
-      document.getElementById("drawerRvCount").textContent = d.pending.length;
-      if (!d.pending.length){ list.innerHTML = "<div class='empty'>No pending reviews.</div>"; return; }
-      list.innerHTML = "";
-      d.pending.forEach(function(r){
-        var stars = "";
-        for (var i=1;i<=5;i++){ stars += (i<=r.rating ? "★" : "☆"); }
-        var div = document.createElement("div");
-        div.className = "list-item";
-        div.innerHTML =
-          "<div class='row1'><span class='title'>" + r.name + "</span>" +
-          "<span class='tag manual'>" + stars + "</span></div>" +
-          "<div class='meta'>" +
-          "<div style='color:var(--text);margin:4px 0 8px;line-height:1.6'>" + r.text + "</div>" +
-          "<div><b>Google Email:</b> " + r.email + "</div>" +
-          "<div><b>Submitted:</b> " + r.timestamp + "</div>" +
-          "<div><b>Country:</b> " + (r.country || "Unknown") + " &nbsp; <b>City:</b> " + (r.city || "Unknown") + "</div>" +
-          "<div><b>IP:</b> " + (r.ip || "Unknown") + "</div>" +
-          "<div><b>Device:</b> " + (r.device || "Unknown") + "</div>" +
-          "<div><b>Timezone:</b> " + (r.timezone || "Unknown") + "</div>" +
-          "<div><b>Operator/ISP:</b> " + (r.isp || "Unknown") + "</div>" +
-          "</div>" +
-          "<div class='actions'>" +
+
+    if (currentReviewTab === "pending"){
+      gfetch("admin_reviews_pending", {}).then(function(d){
+        if (!d || d.status !== "ok"){ list.innerHTML = "<div class='empty'>Couldn't load.</div>"; return; }
+        document.getElementById("rvCountBadge").textContent = d.pending.length;
+        document.getElementById("drawerRvCount").textContent = d.pending.length;
+        rvRenderPanelList_(d.pending, true, "No pending reviews.");
+      }).catch(function(){ list.innerHTML = "<div class='empty'>Network error.</div>"; });
+    } else {
+      var statusParam = currentReviewTab === "approved" ? "Approved" : "Rejected";
+      gfetch("admin_reviews_by_status", { status: statusParam }).then(function(d){
+        if (!d || d.status !== "ok"){ list.innerHTML = "<div class='empty'>Couldn't load.</div>"; return; }
+        document.getElementById("rvCountBadge").textContent = d.reviews.length;
+        rvRenderPanelList_(d.reviews, false, "No " + currentReviewTab + " reviews.");
+      }).catch(function(){ list.innerHTML = "<div class='empty'>Network error.</div>"; });
+    }
+  }
+
+  // Shared card renderer for all three tabs — full readable detail every
+  // time (name, stars, complete review text, email, IP, country, city,
+  // device, timezone, ISP) so you can read everything before deciding,
+  // exactly like the email. Approve/Reject buttons only show on Pending.
+  function rvRenderPanelList_(items, showActions, emptyMsg){
+    var list = document.getElementById("reviewList");
+    if (!items.length){ list.innerHTML = "<div class='empty'>" + emptyMsg + "</div>"; return; }
+    list.innerHTML = "";
+    items.forEach(function(r){
+      var stars = "";
+      for (var i=1;i<=5;i++){ stars += (i<=r.rating ? "★" : "☆"); }
+      var div = document.createElement("div");
+      div.className = "list-item";
+      var actionsHtml = showActions
+        ? "<div class='actions'>" +
           "<button onclick='moderateReview(" + r.row + ",\"approve\",this)' style='border-color:var(--green);color:var(--green)'>Approve</button>" +
           "<button onclick='moderateReview(" + r.row + ",\"reject\",this)' style='border-color:var(--red);color:var(--red)'>Reject</button>" +
-          "</div>";
-        list.appendChild(div);
-      });
-    }).catch(function(){ list.innerHTML = "<div class='empty'>Network error.</div>"; });
+          "</div>"
+        : "";
+      div.innerHTML =
+        "<div class='row1'><span class='title'>" + r.name + "</span>" +
+        "<span class='tag manual'>" + stars + "</span></div>" +
+        "<div class='meta'>" +
+        "<div style='color:var(--text);margin:4px 0 8px;line-height:1.6'>" + r.text + "</div>" +
+        "<div><b>Google Email:</b> " + r.email + "</div>" +
+        "<div><b>Submitted:</b> " + r.timestamp + "</div>" +
+        "<div><b>Country:</b> " + (r.country || "Unknown") + " &nbsp; <b>City:</b> " + (r.city || "Unknown") + "</div>" +
+        "<div><b>IP:</b> " + (r.ip || "Unknown") + "</div>" +
+        "<div><b>Device:</b> " + (r.device || "Unknown") + "</div>" +
+        "<div><b>Timezone:</b> " + (r.timezone || "Unknown") + "</div>" +
+        "<div><b>Operator/ISP:</b> " + (r.isp || "Unknown") + "</div>" +
+        "</div>" + actionsHtml;
+      list.appendChild(div);
+    });
   }
 
   function moderateReview(row, action, btn){
@@ -1007,11 +1045,8 @@
     gfetch("admin_review_action", { row: row, action: action }).then(function(d){
       if (d && d.status === "ok"){
         showToast(action === "approve" ? "Review approved." : "Review rejected.", "ok");
-        card.remove();
-        var remaining = document.querySelectorAll("#reviewList .list-item").length;
-        document.getElementById("rvCountBadge").textContent = remaining;
-        document.getElementById("drawerRvCount").textContent = remaining;
-        if (!remaining) document.getElementById("reviewList").innerHTML = "<div class='empty'>No pending reviews.</div>";
+        loadReviews(); // refresh the current tab so counts/lists stay accurate
+        refreshRvCountBadgeQuiet();
       } else {
         buttons.forEach(function(b){ b.disabled = false; });
         showToast((d && d.message) ? d.message : "Something went wrong.", "err");
